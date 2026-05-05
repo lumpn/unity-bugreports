@@ -20,6 +20,7 @@ It seems that the bug happens when there's a hitch on the main thread that cause
 As a user, I would expect my animation clips to finish playing, I would expect my bools to toggle reliably, and I would expect my animation clip events to fire reliably, always, not just when the frame rate is high enough to sample each and every frame in a clip.
 
 # Unity's response
+```By design```
 I have decided that this behavior is by design due to how the Animator handles game lag and animated properties. When a heavy frame drop occurs, the Animator skips frames to catch up, meaning events placed at the very end of a clip can simply be missed. Because of this, Animation Events are intended more for secondary, cosmetic effects (like triggering sound effects or visual particles) rather than critical game logic. Additionally, because the animation clip is actively controlling the UI Image, the Animator will automatically override any outside scripts that try to change it during a transition.
 
 Workaround: For reliable logic, I would recommend using a StateMachineBehaviour script attached to your Animator state instead of standard Animation Events. You can use the OnStateExit function to disable the entire GameObject (using `gameObject.SetActive(false)`) rather than just the Image component. This guarantees the object turns off exactly when the animation state finishes and stops the Animator from overriding your script.
