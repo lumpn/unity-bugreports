@@ -30,6 +30,13 @@ This bug report is not about Animation Events. I understand that Animation Event
 
 The bug I’m presenting here, as stated, is that a `bool` property animated by an animation clip does not get set to its final value. Additionally, the color property animated by the same animation clip does not get set to its final value either. The entire clip simply gets abandoned before it has finished playing.
 
+# Unity's response (2)
+The developers have confirmed that this behavior is by design. For keyframed animations, the Animator only evaluates and writes back the values at the exact current timestamp it lands on. When a lag spike causes a large time jump, it skips the time in between. Because it does not retroactively process missed frames, the developers noted that it is not safe to toggle critical properties in the very last keyframes of a clip, as you cannot guarantee they will be properly evaluated during a performance hitch.
+
+Since this is the intended evaluation architecture of the Animator, we will not be reopening the bug. However, the developers strongly recommend the following two solutions to achieve the reliable behavior you are looking for:
+- Use a StateMachineBehaviour: You can use the OnStateExit callback to manually sync and enforce your final boolean and color properties. The developers note this is the safest and most robust way to guarantee state logic executes, even during heavy lag.
+- Adjust your Animation Clips: Change how your clips are built by ensuring that the next animation state explicitly sets and enforces the desired boolean and color values the moment it starts evaluating.
+
 # References
 - https://docs.unity3d.com/Manual/class-Animator.html
 - https://docs.unity3d.com/Manual/StateMachineBasics.html
