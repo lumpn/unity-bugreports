@@ -25,7 +25,7 @@ I have decided that this behavior is by design due to how the Animator handles g
 
 Workaround: For reliable logic, I would recommend using a StateMachineBehaviour script attached to your Animator state instead of standard Animation Events. You can use the OnStateExit function to disable the entire GameObject (using `gameObject.SetActive(false)`) rather than just the Image component. This guarantees the object turns off exactly when the animation state finishes and stops the Animator from overriding your script.
 
-# Additional notes
+# Objection
 This bug report is not about Animation Events. I understand that Animation Events are unreliable and get skipped when a frame drop occurs, but this is not that.
 
 The bug I’m presenting here, as stated, is that a `bool` property animated by an animation clip does not get set to its final value. Additionally, the color property animated by the same animation clip does not get set to its final value either. The entire clip simply gets abandoned before it has finished playing.
@@ -36,6 +36,9 @@ The developers have confirmed that this behavior is by design. For keyframed ani
 Since this is the intended evaluation architecture of the Animator, we will not be reopening the bug. However, the developers strongly recommend the following two solutions to achieve the reliable behavior you are looking for:
 - Use a StateMachineBehaviour: You can use the OnStateExit callback to manually sync and enforce your final boolean and color properties. The developers note this is the safest and most robust way to guarantee state logic executes, even during heavy lag.
 - Adjust your Animation Clips: Change how your clips are built by ensuring that the next animation state explicitly sets and enforces the desired boolean and color values the moment it starts evaluating.
+
+# Objection (2)
+Using OnStateExit in StateMachineBehaviour to enforce the final values does not work. [The Animator overwrites the values of all animated properties](../AnimatorBug2) even after the animation clip has finished playing.
 
 # References
 - https://docs.unity3d.com/Manual/class-Animator.html
