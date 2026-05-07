@@ -38,7 +38,7 @@ Since this is the intended evaluation architecture of the Animator, we will not 
 - Adjust your Animation Clips: Change how your clips are built by ensuring that the next animation state explicitly sets and enforces the desired boolean and color values the moment it starts evaluating.
 
 # Objection (2)
-Using OnStateExit in StateMachineBehaviour to enforce the final values, the first solution the developers strongly recommend, does not work. [The Animator overwrites the values of all animated properties](../AnimatorBug2) even after the animation clip has finished playing.
+Using OnStateExit in StateMachineBehaviour to enforce the final values, the first solution the developers strongly recommend, does not work. The [Animator overwrites the values of all animated properties](../AnimatorBug2) even after the animation clip has finished playing.
 
 # References
 - https://docs.unity3d.com/Manual/class-Animator.html
